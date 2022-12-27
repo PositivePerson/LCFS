@@ -59,47 +59,68 @@ int main() {
                   return f.getArrivalTime() < s.getArrivalTime();
               });
 
+    cout << "\n-Sorted- Ids:\n";
+    for (auto proc: processes)
+        cout << "Process id: " << proc.getId() << '\n';
+    cout << '\n';
+
 
     int processesDone = 0;
     int seconds = 0;
-    Process currentProcess = processes[0];
-    vector<Process> stoppedProcesses;
-    while (1) {
-        cout << "Enter while\n";
+    Process *currentProcess = &processes[0];
+    vector<Process *> stoppedProcesses;
+    int nextArrivalIndex = 1;
+    do {
+        cout << '\n' << seconds << " sec: Enter while - process "
+             << currentProcess->getId() << '\n';
 
-        if (processesDone == processes.size()) break;
+        currentProcess->setProgress(currentProcess->getProgress() + 1);
 
-        int nextIndex = currentProcess.getId() + 1;
-        if (seconds == processes[nextIndex].getArrivalTime()) {//Next progress
+        // If next process arrived
+        if (seconds == processes[nextArrivalIndex].getArrivalTime()) {//Next Process
+            cout << "Process " << nextArrivalIndex << " arrived\n";
             stoppedProcesses.push_back(currentProcess); //Stop current Process
-            currentProcess = processes[nextIndex];      //Replace 'current'
-            currentProcess.setProgress(0);
+            currentProcess = &processes[nextArrivalIndex];      //Replace 'current'
+            currentProcess->setProgress(0);
+
+            nextArrivalIndex = currentProcess->getId() + 1;
         } else {
-            currentProcess.setProgress(currentProcess.getProgress() + 1);
+            cout << "Still process " << currentProcess->getId() << " running\n";
         }
 
-        if (currentProcess.getProgress() == currentProcess.getBurstTime()) {//Completed
-            cout << "Process nr " << currentProcess.getId() << ": done.\n";
+        //  If completed
+        if (currentProcess->getProgress() == currentProcess->getBurstTime()) {
+            currentProcess->setCompletionTime(seconds);
+
+            cout << "Process nr " << currentProcess->getId() << ": done.\n";
             processesDone++;
 
-            currentProcess = stoppedProcesses.back();
-            stoppedProcesses.pop_back();
+            if (stoppedProcesses.size() > 0) {
+                currentProcess = stoppedProcesses.back();
+                stoppedProcesses.pop_back();
+            }
         }
 
+
+//        // If all done
+//        if (processesDone >= processes.size()) {
+//            cout << "Done all " << processesDone << " processes in "
+//                 << seconds << " seconds\n";
+//            break;
+//        }
+
         seconds++;
-    }
+    } while (processesDone < processes.size());
 
-    cout << "processesDone: " << processesDone << '\n';
-    cout << "seconds: " << seconds << '\n';
+    cout << "\nDone all " << processesDone << " processes in "
+         << seconds << " seconds\n";
 
-//    cout << "-Sorted- Ids:\n";
-//    for (auto proc: processes)
-//        cout << "Process id: " << proc.getId() << '\n';
-//    cout << '\n';
+    cout << "Process id 2 completion time: "
+         << processes[2].getCompletionTime() << '\n';
 
 //    findCTandWT(processes);
 //    findTAT(processes);
 
-//    displayAll(processes);
+    displayAll(processes);
     return 0;
 }
