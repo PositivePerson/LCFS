@@ -16,7 +16,8 @@ class Process {
     int completionTime = -1;
     int TAT = -1;            // Turn Around Time
     int WT = -1;             // Waiting Time
-    int RT = -1;             // Response Time === WT in FCFS algorithm
+    int RT = 0;              // Response Time == 0 in LCFS
+    //---------------------- // (because we get CPU attention as soon as process arrive)
 public:
     int counter;
 

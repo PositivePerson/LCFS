@@ -35,7 +35,7 @@ void findCTandWT(vector<Process> &processes) {
 
 void displayAll(vector<Process> processes) {
     cout << "Process id  " << " Arrival time  " << " Burst time  " << " | " << " Completion time  "
-         << " Turn around time " << " Waiting time\n";
+         << " Turn around time " << " Waiting time " << " Response Time\n";
     for (Process process: processes) {
         cout << "   " << process.getId()
              << "\t\t" << process.getArrivalTime()
@@ -43,7 +43,8 @@ void displayAll(vector<Process> processes) {
              << "\t | "
              << "\t    " << process.getCompletionTime()
              << "\t\t    " << process.getTAT()
-             << "\t\t    " << process.getWT() << endl;
+             << "\t\t    " << process.getWT()
+             << "\t\t    " << process.getRT() << endl;
     }
 }
 
@@ -91,6 +92,8 @@ int main() {
         //  If completed
         if (currentProcess->getProgress() == currentProcess->getBurstTime()) {
             currentProcess->setCompletionTime(seconds);
+            currentProcess->setTAT(seconds - currentProcess->getArrivalTime());
+            currentProcess->setWT(currentProcess->getTAT() - currentProcess->getBurstTime());
 
             cout << "Process nr " << currentProcess->getId() << ": done.\n";
             processesDone++;
