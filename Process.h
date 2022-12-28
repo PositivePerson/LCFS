@@ -2,14 +2,14 @@
 // Created by Bartek on 20/12/2022.
 //
 
-#ifndef FCFS_PROCESS_H
-#define FCFS_PROCESS_H
+#ifndef LCFS_PROCESS_H
+#define LCFS_PROCESS_H
 
 #include <string>
 #include <vector>
 
 class Process {
-    int id;
+    int id = -1;
     int progress = -1;
     int arrivalTime;
     int burstTime;
@@ -22,7 +22,8 @@ public:
     int counter;
 
 //    Process();
-    Process(int _id, int _arrivalTime, int _burstTime);
+//    Process(int _id, int _arrivalTime, int _burstTime);
+    Process(int _arrivalTime, int _burstTime);
 //    ~Process();
 
     void info();
@@ -30,6 +31,8 @@ public:
     void setProgress(int _value);
 
     int getProgress();
+
+    void setId(int _id);
 
     int getId();
 
@@ -55,4 +58,4 @@ public:
 };
 
 
-#endif //FCFS_PROCESS_H
+#endif //LCFS_PROCESS_H

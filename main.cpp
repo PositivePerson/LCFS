@@ -5,33 +5,7 @@
 using namespace std;
 
 #include "Process.h"
-
-void findTAT(vector<Process> &processes) {
-    for (auto &process: processes) {
-        int temp = process.getCompletionTime() - process.getArrivalTime();
-        process.setTAT(temp);
-    }
-}
-
-void findCTandWT(vector<Process> &processes) {
-    int nextStartAt = 0;
-    for (auto &process: processes) {
-//        cout << "Running findCTandWT loop, lastEndAt: " << nextStartAt
-//        << " | arrivalTime: " << process.getArrivalTime() << endl;
-
-        int difference = nextStartAt - process.getArrivalTime();
-
-        if (difference >= 0) { // Continuous running CPU
-            process.setWT(nextStartAt - process.getArrivalTime());
-            nextStartAt += process.getBurstTime();
-        } else { // Interval between processes occured
-            process.setWT(0);
-            nextStartAt += (process.getBurstTime() + -difference);
-        }
-
-        process.setCompletionTime(nextStartAt);
-    }
-}
+#include "generator.h"
 
 void displayAll(vector<Process> processes) {
     cout << "Process id  " << " Arrival time  " << " Burst time  " << " | " << " Completion time  "
@@ -49,36 +23,56 @@ void displayAll(vector<Process> processes) {
 }
 
 int main() {
-    Process a = Process(0, 0, 2);
-    Process c = Process(2, 5, 3);
-    Process b = Process(1, 1, 2);
-    Process d = Process(3, 6, 4);
+    int protec = 1000;
+//    Process a = Process(0, 0, 2);
+//    Process c = Process(2, 5, 3);
+//    Process b = Process(1, 1, 2);
+//    Process d = Process(3, 6, 4);
 
-    vector<Process> processes = {a, b, c, d};
-    std::sort(processes.begin(), processes.end(),
-              [](Process &f, Process &s) {
-                  return f.getArrivalTime() < s.getArrivalTime();
-              });
+//    vector<Process> processes = {a, b, c, d};
+    vector<Process> processes = generate(4);
 
-    cout << "\n-Sorted- Ids:\n";
-    for (auto proc: processes)
-        cout << "Process id: " << proc.getId() << '\n';
-    cout << '\n';
+//    sortATs(processes);
 
+    displayAll(processes);
 
-    int processesDone = 0;
+    int processesDone = 0; //Amount
     int seconds = 0;
-    Process *currentProcess = &processes[0];
+//    Process *currentProcess = &processes[0];
+    Process *currentProcess = nullptr;
     vector<Process *> stoppedProcesses;
-    int nextArrivalIndex = 1;
+    int nextArrivalIndex = 0;
     do {
-        cout << '\n' << seconds << " sec: Enter while - process "
-             << currentProcess->getId() << '\n';
+        if (currentProcess != nullptr) {
+            cout << '\n' << seconds << " sec: Enter while - process "
+                 << currentProcess->getId() << '\n';
 
-        currentProcess->setProgress(currentProcess->getProgress() + 1);
+            currentProcess->setProgress(currentProcess->getProgress() + 1);
+        } else {
+            cout << '\n' << seconds << " sec: Enter while - nullptr\n";
+        }
+
+        if (currentProcess != nullptr) {
+            //  If completed
+            if (currentProcess->getProgress() == currentProcess->getBurstTime()) {
+                currentProcess->setCompletionTime(seconds);
+                currentProcess->setTAT(seconds - currentProcess->getArrivalTime());
+                currentProcess->setWT(currentProcess->getTAT() - currentProcess->getBurstTime());
+
+                cout << "Process nr " << currentProcess->getId() << ": done.\n";
+                processesDone++;
+
+                currentProcess = nullptr;
+
+                if (stoppedProcesses.size() > 0) {
+                    currentProcess = stoppedProcesses.back();
+                    stoppedProcesses.pop_back();
+                }
+            }
+        }
 
         // If next process arrived
-        if (seconds == processes[nextArrivalIndex].getArrivalTime()) {//Next Process
+        if (seconds == processes[nextArrivalIndex].getArrivalTime()) {
             cout << "Process " << nextArrivalIndex << " arrived\n";
             stoppedProcesses.push_back(currentProcess); //Stop current Process
             currentProcess = &processes[nextArrivalIndex];      //Replace 'current'
@@ -86,43 +80,21 @@ int main() {
 
             nextArrivalIndex = currentProcess->getId() + 1;
         } else {
-            cout << "Still process " << currentProcess->getId() << " running\n";
+            cout << "Still running some process\n";
         }
 
-        //  If completed
-        if (currentProcess->getProgress() == currentProcess->getBurstTime()) {
-            currentProcess->setCompletionTime(seconds);
-            currentProcess->setTAT(seconds - currentProcess->getArrivalTime());
-            currentProcess->setWT(currentProcess->getTAT() - currentProcess->getBurstTime());
-
-            cout << "Process nr " << currentProcess->getId() << ": done.\n";
-            processesDone++;
-
-            if (stoppedProcesses.size() > 0) {
-                currentProcess = stoppedProcesses.back();
-                stoppedProcesses.pop_back();
-            }
+        if ((processesDone < processes.size()) &&
+            (processes[nextArrivalIndex].getArrivalTime() != seconds)) {
+                seconds++;
         }
 
-
-//        // If all done
-//        if (processesDone >= processes.size()) {
-//            cout << "Done all " << processesDone << " processes in "
-//                 << seconds << " seconds\n";
-//            break;
-//        }
-
-        seconds++;
-    } while (processesDone < processes.size());
+    } while (processesDone < processes.size() && (--protec));
 
     cout << "\nDone all " << processesDone << " processes in "
          << seconds << " seconds\n";
 
     cout << "Process id 2 completion time: "
          << processes[2].getCompletionTime() << '\n';
-
-//    findCTandWT(processes);
-//    findTAT(processes);
 
     displayAll(processes);
     return 0;

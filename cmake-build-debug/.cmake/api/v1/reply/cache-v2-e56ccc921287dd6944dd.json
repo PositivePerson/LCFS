@@ -875,7 +875,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "FCFS"
+			"value" : "LCFS"
 		},
 		{
 			"name" : "CMAKE_RANLIB",
@@ -1279,6 +1279,42 @@
 		},
 		{
 			"name" : "FCFS_SOURCE_DIR",
+			"properties" : 
+			[
+				{
+					"name" : "HELPSTRING",
+					"value" : "Value Computed by CMake"
+				}
+			],
+			"type" : "STATIC",
+			"value" : "C:/mine/MyApp/LCFS"
+		},
+		{
+			"name" : "LCFS_BINARY_DIR",
+			"properties" : 
+			[
+				{
+					"name" : "HELPSTRING",
+					"value" : "Value Computed by CMake"
+				}
+			],
+			"type" : "STATIC",
+			"value" : "C:/mine/MyApp/LCFS/cmake-build-debug"
+		},
+		{
+			"name" : "LCFS_IS_TOP_LEVEL",
+			"properties" : 
+			[
+				{
+					"name" : "HELPSTRING",
+					"value" : "Value Computed by CMake"
+				}
+			],
+			"type" : "STATIC",
+			"value" : "ON"
+		},
+		{
+			"name" : "LCFS_SOURCE_DIR",
 			"properties" : 
 			[
 				{
