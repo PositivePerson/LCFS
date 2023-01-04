@@ -7,13 +7,13 @@
 
 using namespace std;
 
-//Process::Process(int _id, int _arrivalTime, int _burstTime) : id(_id), arrivalTime(_arrivalTime),
-//                                                              burstTime(_burstTime) {
-//    cout << "Running constructor (Process)... \n";
-//};
+Process::Process(int _id, int _arrivalTime, int _burstTime) : id(_id), arrivalTime(_arrivalTime),
+                                                              burstTime(_burstTime) {
+    cout << "Running constructor (Process)... \n";
+};
 
 Process::Process(int _arrivalTime, int _burstTime) : arrivalTime(_arrivalTime),
-                                                              burstTime(_burstTime) {
+                                                     burstTime(_burstTime) {
     cout << "Running constructor (Process)... \n";
 //    info();
 };

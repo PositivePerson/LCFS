@@ -6,6 +6,7 @@ using namespace std;
 
 #include "Process.h"
 #include "generator.h"
+#include "fetchData.h"
 
 void displayAll(vector<Process> processes) {
     cout << "Process id  " << " Arrival time  " << " Burst time  " << " | " << " Completion time  "
@@ -30,7 +31,11 @@ int main() {
 //    Process d = Process(3, 6, 4);
 
 //    vector<Process> processes = {a, b, c, d};
-    vector<Process> processes = generate(4);
+// ---------- OR ----------
+//    vector<Process> processes = generate(4);
+// ---------- OR ----------
+    vector<Process> processes;
+    getProcessesFromFile(processes);
 
 //    sortATs(processes);
 
@@ -85,7 +90,7 @@ int main() {
 
         if ((processesDone < processes.size()) &&
             (processes[nextArrivalIndex].getArrivalTime() != seconds)) {
-                seconds++;
+            seconds++;
         }
 
     } while (processesDone < processes.size() && (--protec));

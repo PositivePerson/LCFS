@@ -29,7 +29,7 @@ vector<Process> generate(int amount) {
     vector<Process> processes;
     for (int i = 0; i < amount; i++) {
         int _arrivalTime = rand() % 9; // 0-10
-        int _burstTime = 1 + (rand() % 9); // 0-10
+        int _burstTime = 1 + (rand() % 9); // 1-10
 
         Process temp = Process(_arrivalTime, _burstTime);
         processes.push_back(temp);

@@ -22,7 +22,8 @@ public:
     int counter;
 
 //    Process();
-//    Process(int _id, int _arrivalTime, int _burstTime);
+    Process(int _id, int _arrivalTime, int _burstTime);
+
     Process(int _arrivalTime, int _burstTime);
 //    ~Process();
 
