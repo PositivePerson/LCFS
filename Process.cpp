@@ -55,6 +55,7 @@ int Process::getBurstTime() {
 }
 
 void Process::setCompletionTime(int _value) {
+    cout << "Setting completion time to: " << _value << '\n';
     this->completionTime = _value;
 }
 

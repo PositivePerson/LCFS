@@ -51,10 +51,22 @@ int main() {
         if (currentProcess != nullptr) {
             cout << '\n' << seconds << " sec: Enter while - process "
                  << currentProcess->getId() << '\n';
-
-            currentProcess->setProgress(currentProcess->getProgress() + 1);
         } else {
             cout << '\n' << seconds << " sec: Enter while - nullptr\n";
+        }
+
+        // If next process arrived
+        if (seconds == processes[nextArrivalIndex].getArrivalTime()) {
+            cout << "Process " << nextArrivalIndex << " arrived\n";
+            stoppedProcesses.push_back(currentProcess); //Stop current Process
+            currentProcess = &processes[nextArrivalIndex];      //Replace 'current'
+            currentProcess->setProgress(0);
+
+            nextArrivalIndex = currentProcess->getId() + 1;
+        } else {
+            cout << "Still running some process\n";
+
+            currentProcess->setProgress(currentProcess->getProgress() + 1);
         }
 
         if (currentProcess != nullptr) {
@@ -73,19 +85,11 @@ int main() {
                     currentProcess = stoppedProcesses.back();
                     stoppedProcesses.pop_back();
                 }
+            } else {
+                cout << "Not completed because:" <<
+                        "\tprogress is " << currentProcess->getProgress() <<
+                        "\tburstTime is " << currentProcess->getBurstTime() << '\n';
             }
-        }
-
-        // If next process arrived
-        if (seconds == processes[nextArrivalIndex].getArrivalTime()) {
-            cout << "Process " << nextArrivalIndex << " arrived\n";
-            stoppedProcesses.push_back(currentProcess); //Stop current Process
-            currentProcess = &processes[nextArrivalIndex];      //Replace 'current'
-            currentProcess->setProgress(0);
-
-            nextArrivalIndex = currentProcess->getId() + 1;
-        } else {
-            cout << "Still running some process\n";
         }
 
         if ((processesDone < processes.size()) &&
