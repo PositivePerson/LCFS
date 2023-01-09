@@ -7,6 +7,7 @@ using namespace std;
 #include "Process.h"
 #include "generator.h"
 #include "fetchData.h"
+#include <fstream>
 
 void displayAll(vector<Process> processes) {
     cout << "Process id  " << " Arrival time  " << " Burst time  " << " | " << " Completion time  "
@@ -21,6 +22,25 @@ void displayAll(vector<Process> processes) {
              << "\t\t    " << process.getWT()
              << "\t\t    " << process.getRT() << endl;
     }
+}
+
+void saveToFile(vector<Process> processes) {
+    ofstream processesFile;
+    processesFile.open ("../LCFS_output.csv");
+
+    processesFile << "Process id,  " << " Arrival time,  " << " Burst time,  " << " Completion time,  "
+         << " Turn around time, " << " Waiting time, " << " Response Time\n";
+    for (Process process: processes) {
+        processesFile << process.getId()
+             << ", " << process.getArrivalTime()
+             << ", " << process.getBurstTime()
+             << ", " << process.getCompletionTime()
+             << ", " << process.getTAT()
+             << ", " << process.getWT()
+             << ", " << process.getRT() << endl;
+    }
+
+    processesFile.close();
 }
 
 int main() {
@@ -66,7 +86,8 @@ int main() {
         } else {
             cout << "Still running some process\n";
 
-            currentProcess->setProgress(currentProcess->getProgress() + 1);
+            if(currentProcess != nullptr)
+                currentProcess->setProgress(currentProcess->getProgress() + 1);
         }
 
         if (currentProcess != nullptr) {
@@ -106,5 +127,6 @@ int main() {
          << processes[2].getCompletionTime() << '\n';
 
     displayAll(processes);
+    saveToFile(processes);
     return 0;
 }
